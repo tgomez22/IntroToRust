@@ -5,14 +5,21 @@
 use std::env;
 use std::cmp::Ordering;
 
+
 fn main() {
     
     let args: Vec<String> = env::args().collect();
 
     // Check if there is the expected number of arguments. Call error() if incorrect number of arguments. Else call modexp().
     match args.len().cmp(&4) {
-        Ordering::Less => error(),
-        Ordering::Greater => error(),
+        Ordering::Less => {
+            println!("Too few arguments. This program takes 3 arguments and {} were provided", args.len() - 1);
+            error()
+        },
+        Ordering::Greater => {
+            println!("Too many arguments. This program takes 3 arguments and {} were provided", args.len() -1);
+            error()
+        },
         Ordering::Equal => {
 
             // Found expected number of arguments. Convert them from String to u64 using parsenum(), and store result in vector.
@@ -60,21 +67,52 @@ fn error() -> ! {
 
 /// Parse the given string as a `u64`
 fn parsenum(s: &str) -> u64{
-    s.parse().unwrap_or_else(|_| error())
+
+    // I changed the provided code to display the ParseIntError given if the conversion
+    // fails, so that way users can have more helpful error messages rather than the standard
+    // error message.
+    s.parse().unwrap_or_else(|err_res| {
+            println!("{}", err_res);
+            error()
+        }
+    )
 }
 
 
 /// Test cases
 #[test]
-fn test_modexp(){
+fn test_modexp1(){
     // Largest prime less than 2**64
 
     let bigm = u64::max_value() - 58;
     assert_eq!(0, modexp(bigm - 2, bigm - 1, 1));
-    assert_eq!(1, modexp(bigm - 2, bigm - 1, bigm));
-    assert_eq!(827419628471527655, modexp(bigm - 2, (1 << 32) + 1, bigm));
 
+    assert_eq!(16, modexp(2, 20, 17));
+}
+
+#[test]
+fn test_modexp2(){
+    let bigm = u64::max_value() - 58;
+    assert_eq!(1, modexp(bigm - 2, bigm - 1, bigm));
+}
+
+#[test]
+fn test_modexp3(){
+    let bigm = u64::max_value() - 58;
+    assert_eq!(827419628471527655, modexp(bigm - 2, (1 << 32) + 1, bigm));
+}
+
+#[test]
+fn test_modexp4(){
     assert_eq!(4, modexp(10, 9, 6));
+}
+
+#[test]
+fn test_modexp5(){ 
     assert_eq!(34, modexp(450, 768, 517));
+}
+
+#[test]
+fn test_modexp6(){
     assert_eq!(16, modexp(2, 20, 17));
 }
