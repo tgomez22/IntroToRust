@@ -91,6 +91,11 @@ fn modexp(x: u64, y: u64, m: u64) -> u64 {
 /// Print a usage error message and exit.
 fn error() -> ! {
     eprintln!("modexp: usage: modexp <x> <y> <m>");
+
+    #[cfg(test)]
+    panic!("error");
+
+    #[cfg(not(test))]
     std::process::exit(1);
 }
 
