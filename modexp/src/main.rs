@@ -41,9 +41,8 @@ fn main() {
             // Found expected number of arguments. Convert them from String to u64 using parsenum(), and store result in vector.
             // If any inputs fail to parse successfully then display both a specific err message with exact type of error, as well as,
             // a generic usage error.
-            let converted_args: Vec<u64> =
-                vec![parsenum(&args[1]), parsenum(&args[2]), parsenum(&args[3])];
 
+            let converted_args: [u64; 3] = [parsenum(&args[1]), parsenum(&args[2]), parsenum(&args[2])];
             let ret_val = modexp(converted_args[0], converted_args[1], converted_args[2]);
             println!("{}", ret_val);
             std::process::exit(0);
@@ -110,7 +109,25 @@ fn parsenum(s: &str) -> u64 {
     })
 }
 
+
+/// This method is considered to be 'dead code' because it isn't called in main().
+/// This method is for use is testing because it allows you to test invalid inputs without 
+/// causing compiler errors.
+/// 
+/// This method takes 3 string slices as arguments. This method passes the arguments
+/// into parsenum() one at a time to attempt converting the string slices into u64.
+/// 
+/// 
+#[allow(dead_code)]
+fn correct_number_args(x: &str, y: &str, m: &str){
+    parsenum(x);
+    parsenum(y);
+    parsenum(m);
+}
+
+
 /// Test cases below
+/// 
 #[test]
 fn test_modexp1() {
     // Largest prime less than 2**64
@@ -155,4 +172,58 @@ fn test_modexp7() {
 fn test_modexp8() {
     let num = u64::max_value();
     assert_eq!(0, modexp(num, num, num));
+}
+
+#[test]
+#[should_panic]
+fn test_neg_input1(){
+    correct_number_args("-1", "22", "50")
+}
+
+#[test]
+#[should_panic]
+fn test_neg_input2(){
+    correct_number_args("5", "-1", "50")
+}
+
+#[test]
+#[should_panic]
+fn test_neg_input3(){
+    correct_number_args("5", "22", "-1")
+}
+
+#[test]
+#[should_panic]
+fn test_neg_input4(){
+    correct_number_args("-1", "-6", "50")
+}
+
+#[test]
+#[should_panic]
+fn test_neg_input5(){
+    correct_number_args("-1", "22", "-6")
+}
+
+#[test]
+#[should_panic]
+fn test_neg_input6(){
+    correct_number_args("58", "-1", "-6")
+}
+
+#[test]
+#[should_panic]
+fn test_too_large_input1(){
+    correct_number_args("18446744073709551616", "22", "34")
+}
+
+#[test]
+#[should_panic]
+fn test_too_large_input2(){
+    correct_number_args("22", "18446744073709551616", "34")
+}
+
+#[test]
+#[should_panic]
+fn test_too_large_input3(){
+    correct_number_args("34", "22", "18446744073709551616")
 }
