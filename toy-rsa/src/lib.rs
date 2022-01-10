@@ -27,8 +27,7 @@ pub fn encrypt(key: u64, msg: u32) -> u64 {
 /// Decrypt the cipertext `msg` using the RSA private `key`
 /// and return the resulting plaintext.
 pub fn decrypt(key: (u32, u32), msg: u64) -> u32 {
-    let d: u64 = modinverse(u64::from(key.0), u64::from(key.1));
-    let plaintext: u64 =
-        u64::pow(msg, u32::into(d.try_into().unwrap())) % (u64::from(key.0) * u64::from(key.1));
-    plaintext.try_into().unwrap()
+    let d: u64 = modinverse(EXP, lcm(u64::from(key.0 - 1), u64::from(key.1 - 1)));
+    let plaintext: u64 = modexp(msg, d, u64::from(key.0) * u64::from(key.1));
+    u32::into(plaintext.try_into().unwrap())
 }
