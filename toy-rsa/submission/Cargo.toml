@@ -1,0 +1,9 @@
+[package]
+name = "toy-rsa"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies.toy_rsa_lib]
+git = "http://github.com/pdx-cs-rust/toy-rsa-lib"
