@@ -1,12 +1,10 @@
 #[derive(Debug, Default, Clone)]
-pub struct KWIndex<'a> {
-    index: Vec<&'a str>,
-}
+pub struct KWIndex<'a>(Vec<&'a str>);
 
 impl<'a> KWIndex<'a> {
     /// Make a new empty target words list.
     pub fn new() -> Self {
-        KWIndex { index: Vec::new() }
+        KWIndex(Vec::new())
     }
 
     /// Parse the `target` text and add the sequence of
@@ -53,7 +51,7 @@ impl<'a> KWIndex<'a> {
                 }
             }
             if add_word {
-                self.index.push(word);
+                self.0.push(word);
             }
         }
         self
@@ -72,7 +70,7 @@ impl<'a> KWIndex<'a> {
     /// ```
     pub fn count_matches(&self, keyword: &str) -> usize {
         let mut count: usize = 0;
-        for &word in &self.index {
+        for &word in &self.0 {
             if keyword == word {
                 count += 1;
             }
@@ -94,7 +92,7 @@ impl<'a> KWIndex<'a> {
     /// ```
     pub fn nth_uppercase(&self, n: usize) -> Option<&str> {
         let mut uppercase_words: Vec<&str> = Vec::new();
-        for &word in &self.index {
+        for &word in &self.0 {
             match word.chars().next() {
                 Some(letter) => {
                     if letter.is_ascii_uppercase() {
@@ -114,19 +112,19 @@ impl<'a> KWIndex<'a> {
     /// Count the number of words that are indexed by this
     /// `KWIndex`.
     pub fn len(&self) -> usize {
-        self.index.len()
+        self.0.len()
     }
 
     /// Is this index empty?
     pub fn is_empty(&self) -> bool {
-        match self.index.len() == 0 {
+        match self.0.len() == 0 {
             true => true,
             false => false,
         }
     }
 
     pub fn display_stored_words(&self) {
-        for &word in &self.index {
+        for &word in &self.0 {
             println!("{}", word);
         }
     }
